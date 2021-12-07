@@ -1,0 +1,22 @@
+name: '[Automation] Add review label'
+on:
+  pull_request_review:
+    types: [submitted]
+  pull_request:
+    types: [review_requested]
+  pull_request_target:
+
+jobs:
+  apply-label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.ADMIN_PAT }} || ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['Review']
+            })
